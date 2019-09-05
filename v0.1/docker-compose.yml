@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  backend:
+    image: node:12-alpine
+    working_dir: /usr/node/app
+    volumes: 
+      - ./src/:/usr/node/app
+    ports:
+      -3000:3000 
+    command: node index.js
