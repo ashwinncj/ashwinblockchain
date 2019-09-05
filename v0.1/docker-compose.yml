@@ -4,6 +4,7 @@ services:
   backend:
     image: node:10
     working_dir: /usr/node/app
+    build: ./
     volumes: 
       - ./src/:/usr/node/app
     ports:
