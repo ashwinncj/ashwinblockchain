@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Stopping AshwinBlockchain..."
-cd ../ && docker-compose down
+cd ../src/ && docker-compose down
