@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   backend:
+    container_name: AshwinBlockchainV0.1_backend
     image: node:12-alpine
     working_dir: /usr/node/app
     volumes: 
