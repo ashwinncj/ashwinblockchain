@@ -1,0 +1,11 @@
+{
+  "name": "ashwinblockchain",
+  "version": "0.1.0",
+  "description": "A simple blockchain to suit all the business needs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ashwin Kumar C",
+  "license": "ISC"
+}
