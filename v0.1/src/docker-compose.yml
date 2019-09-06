@@ -10,3 +10,11 @@ services:
     ports:
       - 3000:3000 
     command: node index.js
+    
+  database:
+    container_name: AshwinBlockchainV0.1_database
+    image: couchdb
+    volumes: 
+      - ~/.ashwinblockchaincouchdb/:/opt/couchdb/data
+    ports:
+      - 3984:5984
