@@ -66,16 +66,19 @@ CANAME=$1
     fi
 
     MEMBER=$2
+    MEMBERCERT=${2%%.*}
     if [ -z ${MEMBER+x} ]; then #Checking if the variable MEMBER is unset
     echo "Error: Please provide a valid CSR file to obtain the certificate."
     exit 1
     fi
 
-    openssl x509 -in $MEMBER -req -CA $ABCCONFIG/ca/$CANAME/$CANAME.crt -CAkey $ABCCONFIG/ca/$CANAME/$CANAME.pem -CAcreateserial -out $MEMBER.crt -days 365
+    openssl x509 -in $MEMBER -req -CA $ABCCONFIG/ca/$CANAME/$CANAME.crt -CAkey $ABCCONFIG/ca/$CANAME/$CANAME.pem -CAcreateserial -out $MEMBERCERT.crt -days 365
 
-    if [ -f ./$MEMBER.crt ]; then
-        echo "Certificate for \"$MEMBER\" is output in the present directory as \"$MEMBER.crt\" . Send the certificate file to the member to enable them to join the Ashwin Blockchain network."        
+    if [ -f ./$MEMBERCERT.crt ]; then
+        echo ""
+        echo "Certificate for \"$MEMBER\" is output in the present directory as \"$MEMBERCERT.crt\" . Send the certificate file to the member to enable them to join the Ashwin Blockchain network."        
     else
+        echo ""
         echo "There seems to be an error. Please check with the manual for the usage."
     fi
 }
