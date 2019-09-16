@@ -1,10 +1,15 @@
 #!/bin/bash
 
+createnetwork() {
+    echo "Creating Ashwin Blockchain network..."
+    
+}
+
 mode=$1
 
 case "$mode" in
     create)
-        echo "Create case"
+        createnetwork
     ;;
     *)
         echo "default"
@@ -12,3 +17,4 @@ case "$mode" in
 esac
 
 #shift $((OPTIND -1))
+
