@@ -36,7 +36,7 @@ caRequest(){
     fi
 
     #Check if member already exists
-     if [ -d $ABCCONFIG/member/$MEMBER ]; then 
+     if [ -d $ABCCONFIG/membership/$MEMBER ]; then 
         echo "Error: Network member \"$MEMBER\" already exists"
         exit 1
     fi
@@ -44,11 +44,11 @@ caRequest(){
     #Create a directory in the name of the member
     echo "Setting up network member \"$MEMBER\""
     {
-        mkdir -p $ABCCONFIG/member/$MEMBER
-        openssl genrsa -out $ABCCONFIG/member/$MEMBER/$MEMBER.pem
+        mkdir -p $ABCCONFIG/membership/$MEMBER
+        openssl genrsa -out $ABCCONFIG/membership/$MEMBER/$MEMBER.pem
     }&> /dev/null
 
-    openssl req -key $ABCCONFIG/member/$MEMBER/$MEMBER.pem -new -out $MEMBER.csr
+    openssl req -key $ABCCONFIG/membership/$MEMBER/$MEMBER.pem -new -out $MEMBER.csr
     echo ""
     echo "Certificate Signing Request (CSR) for \"$MEMBER\" has been output in the present directory as \"$MEMBER.csr\" . Please send the file to CA to sign and obtain the certificate to join Ashwin Blockchain Network."
 }
@@ -96,13 +96,13 @@ caUpdateCert(){
         exit 1
     fi
 
-    #Check if member already exists
-     if [ ! -d $ABCCONFIG/member/$MEMBER ]; then 
+    #Check if member exists
+     if [ ! -d $ABCCONFIG/membership/$MEMBER ]; then 
         echo "Error: Network member \"$MEMBER\" does not exist!"
         exit 1
     fi
 
-    cp $2 $ABCCONFIG/member/$MEMBER/
+    cp $2 $ABCCONFIG/membership/$MEMBER/
     echo "Member certificate \"$2\" updated and copied to the configuration folder."
 
 }
