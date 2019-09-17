@@ -106,6 +106,28 @@ caUpdateCert(){
     echo "Member certificate \"$2\" updated and copied to the configuration folder."
 
 }
+
+#Function to add admin certificate to the member node
+
+caAdminCert(){
+    echo "Updating admin certificate to the node..."
+    ADMIN=$1
+    if [ -z ${ADMIN+x} ]; then #Checking if the variable MEMBER is unset
+        echo "Error: Please provide a valid Admin Certificate file."
+        exit 1
+    fi
+    
+    mkdir -p $ABCCONFIG/admin/
+    cp $ADMIN $ABCCONFIG/admin/admin.crt
+
+    echo ""
+    echo "New admin certificate \"$ADMIN\" added to the node successfully."
+}
+
+
+
+
+
 #User input recorded from the terminal to start the CA module.
 
 if [ -z ${1+x} ]; then # Check if the operation mode is set
@@ -127,6 +149,9 @@ case "$mode" in
     ;;
     updatecert)
         caUpdateCert $2 $3
+    ;;
+    admincert)
+        caAdminCert $2
     ;;
     *)
         echo "Please check the option selected."
