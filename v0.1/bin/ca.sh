@@ -112,7 +112,7 @@ caUpdateCert(){
 caAdminCert(){
     echo "Updating admin certificate to the node..."
     ADMIN=$1
-    if [ -z ${ADMIN+x} ]; then #Checking if the variable MEMBER is unset
+    if [ -z ${ADMIN+x} ]; then #Checking if the variable ADMIN is unset
         echo "Error: Please provide a valid Admin Certificate file."
         exit 1
     fi
