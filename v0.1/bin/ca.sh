@@ -10,7 +10,7 @@ caSetup(){
     fi
 
     #Check if CA name already exists
-     if [ -d $ABCCONFIG/ca/$CANAME ]; then 
+     if [ -d $ABCCONFIG/membership/$CANAME ]; then 
     echo "Error: CA \"$CANAME\" already exists"
     exit 1
     fi
@@ -18,11 +18,11 @@ caSetup(){
     #Create a directory in the name of the CA
     echo "Setting up CA \"$CANAME\""
     {
-        mkdir -p $ABCCONFIG/ca/$CANAME
-        openssl genrsa -out $ABCCONFIG/ca/$CANAME/$CANAME.pem
+        mkdir -p $ABCCONFIG/membership/$CANAME
+        openssl genrsa -out $ABCCONFIG/membership/$CANAME/$CANAME.pem
     }&> /dev/null
 
-    openssl req -x509 -key $ABCCONFIG/ca/$CANAME/$CANAME.pem -new -out $ABCCONFIG/ca/$CANAME/$CANAME.crt -days 365
+    openssl req -x509 -key $ABCCONFIG/membership/$CANAME/$CANAME.pem -new -out $ABCCONFIG/membership/$CANAME/$CANAME.crt -days 365
 }
 
 #Function for requesting certificate from the CA
@@ -64,7 +64,7 @@ CANAME=$1
     fi
 
     #Check if CA exists
-     if [ ! -d $ABCCONFIG/ca/$CANAME ]; then 
+     if [ ! -d $ABCCONFIG/membership/$CANAME ]; then 
         echo "Error: CA \"$CANAME\" does not exist. Please check the CA name"
         exit 1
     fi
@@ -76,7 +76,7 @@ CANAME=$1
         exit 1
     fi
 
-    openssl x509 -in $MEMBER -req -CA $ABCCONFIG/ca/$CANAME/$CANAME.crt -CAkey $ABCCONFIG/ca/$CANAME/$CANAME.pem -CAcreateserial -out $MEMBERCERT.crt -days 365
+    openssl x509 -in $MEMBER -req -CA $ABCCONFIG/membership/$CANAME/$CANAME.crt -CAkey $ABCCONFIG/membership/$CANAME/$CANAME.pem -CAcreateserial -out $MEMBERCERT.crt -days 365
 
     if [ -f ./$MEMBERCERT.crt ]; then
         echo ""
@@ -124,6 +124,25 @@ caAdminCert(){
     echo "New admin certificate \"$ADMIN\" added to the node successfully."
 }
 
+#Function to output admin certificate to the folder
+
+caoutputadmincert(){
+    echo "Getting CA Admin Certificate..."
+    CANAME=$1
+    if [ -z ${CANAME+x} ]; then #Checking if the variable CNAME is unset
+        echo "Error: Please provide a name to output CA Admin Cert."
+        exit 1
+    fi
+
+    #Check if CA exists
+     if [ ! -d $ABCCONFIG/membership/$CANAME ]; then 
+        echo "Error: CA \"$CANAME\" does not exist. Please check the CA name"
+        exit 1
+    fi
+
+    cp $ABCCONFIG/membership/$CANAME/$CANAME.crt ./admin.crt
+    echo "CA admin cert for \"$CANAME\" has been output in the present folder as \"admin.crt\" ."
+}
 
 
 
@@ -152,6 +171,9 @@ case "$mode" in
     ;;
     admincert)
         caAdminCert $2
+    ;;
+    outputadmincert)
+        caoutputadmincert $2
     ;;
     *)
         echo "Please check the option selected."
