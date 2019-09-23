@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ABCCONFIG=~/.ashwinblockchainconfig
-
+COUCHDBPORT=5984
 
 #Beacon file to handle the connection of peers to the network
 
@@ -10,7 +10,28 @@ ABCCONFIG=~/.ashwinblockchainconfig
 #Beacon setup function
 
 beaconSetup(){
-    echo 'tets'
+    NETWORK=$1
+    if [ -z ${NETWORK+x} ]; then #Checking if the variable ADMIN is unset
+        echo "Error: Please provide a valid Network name."
+        exit 1
+    fi
+    echo "Setting up Ashwin Blockchain Permissioned Network Beacon..."
+    echo "Creating required setup for the new \"$NETWORK\" network"
+    echo "Creating ledgers"
+    {
+        curl -X PUT localhost:$COUCHDBPORT/ashwinblokchain_$NETWORK -o .response.txt
+    }&> /dev/null
+    
+    CREATEDBOP=$(cat .response.txt | jq ".ok")
+    if [ "$CREATEDBOP" = "true" ]; then
+        echo "Ledger created successfully."
+    else
+        echo "Error while creating ledger. Check the name or replace the network name."
+        cat .response.txt
+        rm .response.txt
+        exit 1
+    fi
+    
 }
 
 #########################################################
@@ -75,7 +96,7 @@ mode=$1
 
 case "$mode" in
     setup)
-        beaconSetup
+        beaconSetup $2
     ;;
     admincert)
         beaconAdminCert $2
