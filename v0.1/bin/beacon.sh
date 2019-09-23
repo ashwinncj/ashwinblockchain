@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ABCCONFIG=~/.ashwinblockchainconfig
+
+
 #Beacon file to handle the connection of peers to the network
 
 #########################################################
@@ -7,7 +10,7 @@
 #Beacon setup function
 
 beaconSetup(){
-
+    echo 'tets'
 }
 
 #########################################################
@@ -34,7 +37,29 @@ beaconAdminCert(){
 #Function to register a new member node.
 
 beaconAddMember(){
+    echo "Adding new member to the permissioned Ashwin Blockchain Network..."
+    MEMBERCERT=$1
+    MEMBERHOST=$2
+    if [ -z ${MEMBERCERT+x} ]; then #Checking if the member cert is provided.
+        echo "Error: Please provide a valid Member Certificate file."
+        exit 1
+    fi
+    
+    if [ -z ${MEMBERHOST+x} ]; then #Checking if the member host is provided.
+        echo "Error: Please provide a valid Member host address"
+        exit 1
+    fi
 
+    #Operation to add the member to the Beacon list of CouchDB Replication
+    {
+        openssl verify -CAfile $ABCCONFIG/admin/admin.crt $MEMBERCERT
+    }
+    &> /dev/null
+    if [ $? -eq 1 ]; then
+        echo "Error: An error occured. Please check the inputs."
+    else
+        echo "Member certificate verifed."
+    fi
 }
 
 ##########################################################

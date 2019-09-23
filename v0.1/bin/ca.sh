@@ -23,6 +23,13 @@ caSetup(){
     }&> /dev/null
 
     openssl req -x509 -key $ABCCONFIG/membership/$CANAME/$CANAME.pem -new -out $ABCCONFIG/membership/$CANAME/$CANAME.crt -days 365
+    
+    if [ $? -eq 1 ]; then
+        echo "Error: An error occured. Please check the inputs."
+    else
+        echo ""
+        echo "New CA \"$CANAME\" added."
+    fi
 }
 
 #Function for requesting certificate from the CA
@@ -140,8 +147,8 @@ caoutputadmincert(){
         exit 1
     fi
 
-    cp $ABCCONFIG/membership/$CANAME/$CANAME.crt ./admin.crt
-    echo "CA admin cert for \"$CANAME\" has been output in the present folder as \"admin.crt\" ."
+    cp $ABCCONFIG/membership/$CANAME/$CANAME.crt ./
+    echo "CA admin cert for \"$CANAME\" has been output in the present folder as \"$CANAME.crt\" ."
 }
 
 
