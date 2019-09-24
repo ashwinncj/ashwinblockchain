@@ -60,7 +60,9 @@ beaconAdminCert(){
 beaconAddMember(){
     echo "Adding new member to the permissioned Ashwin Blockchain Network..."
     MEMBERCERT=$1
-    MEMBERHOST=$2
+    MEMBERSIGNATURE=$2
+    MEMBERHOST=$3
+    ISVERIFIED=1
     if [ -z ${MEMBERCERT+x} ]; then #Checking if the member cert is provided.
         echo "Error: Please provide a valid Member Certificate file."
         exit 1
@@ -71,16 +73,25 @@ beaconAddMember(){
         exit 1
     fi
 
-    #Operation to add the member to the Beacon list of CouchDB Replication
+    #Operations to add the member to the Beacon list of CouchDB Replication
     {
-        openssl verify -CAfile $ABCCONFIG/admin/admin.crt $MEMBERCERT
-    }
-    &> /dev/null
-    if [ $? -eq 1 ]; then
-        echo "Error: An error occured. Please check the inputs."
-    else
+        VERIFICATIONRESULT=$(openssl verify -CAfile $ABCCONFIG/admin/admin.crt $MEMBERCERT)
+    }&> /dev/null
+
+    if [ "$VERIFICATIONRESULT" = "$MEMBERCERT: OK" ]; then
         echo "Member certificate verifed."
+        ISVERIFIED=0
+    else
+        echo "Error: An error occured. Please check the inputs."        
     fi
+
+    if [ $ISVERIFIED -eq 0 ]; then
+        echo "Verifying the signatures to validate the member."
+        PUBKEY=$(openssl x509 -pubkey -noout -in $MEMBERCERT)
+        echo $PUBKEY
+        #openssl dgst -sha256 -verify $PUBKEY -signature $MEMBERSIGNATURE $MEMBERCERT        
+    fi
+
 }
 
 ##########################################################
@@ -102,7 +113,7 @@ case "$mode" in
         beaconAdminCert $2
     ;;
     addmember)
-        beaconAddMember $2 $3
+        beaconAddMember $2 $3 $4
     ;;
     *)
         echo "Please check the option selected."
